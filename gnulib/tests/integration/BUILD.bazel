@@ -1,8 +1,25 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 
+# One alias per BCR module that depends on `rules_cc_autoconf`.  Platform
+# restrictions mirror each module's own BCR `presubmit.yml` platform list.
+
 alias(
     name = "bison",
     actual = "@bison",
+)
+
+alias(
+    name = "cpio",
+    actual = "@cpio",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "crispy-doom",
+    actual = "@crispy-doom//src:crispy-doom",
 )
 
 alias(
@@ -20,13 +37,56 @@ alias(
 )
 
 alias(
+    name = "gawk",
+    actual = "@gawk",
+)
+
+alias(
     name = "gmp",
     actual = "@gmp",
 )
 
 alias(
+    name = "grep",
+    actual = "@grep",
+)
+
+alias(
+    name = "gzip",
+    actual = "@gzip",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "iverilog",
+    actual = "@iverilog",
+)
+
+alias(
+    name = "libde265",
+    actual = "@libde265",
+)
+
+alias(
     name = "libgd",
     actual = "@libgd",
+)
+
+alias(
+    name = "libgpiod",
+    actual = "@libgpiod",
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+)
+
+alias(
+    name = "libheif",
+    actual = "@libheif",
 )
 
 alias(
@@ -36,6 +96,11 @@ alias(
         "@platforms//os:windows": ["@platforms//:incompatible"],
         "//conditions:default": [],
     }),
+)
+
+alias(
+    name = "libpaper",
+    actual = "@libpaper",
 )
 
 alias(
@@ -50,10 +115,11 @@ alias(
 alias(
     name = "libssh2",
     actual = "@libssh2",
-    target_compatible_with = select({
-        "@platforms//os:windows": ["@platforms//:incompatible"],
-        "//conditions:default": [],
-    }),
+)
+
+alias(
+    name = "libusb",
+    actual = "@libusb",
 )
 
 alias(
@@ -66,8 +132,27 @@ alias(
 )
 
 alias(
+    name = "libzip",
+    actual = "@libzip",
+)
+
+alias(
+    name = "linuxptp",
+    actual = "@linuxptp//:ptp4l",
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+)
+
+alias(
     name = "m4",
     actual = "@m4",
+)
+
+alias(
+    name = "make",
+    actual = "@make",
 )
 
 alias(
@@ -80,8 +165,51 @@ alias(
 )
 
 alias(
+    name = "mpc",
+    actual = "@mpc",
+)
+
+alias(
+    name = "mpfr",
+    actual = "@mpfr",
+)
+
+alias(
+    name = "nasm",
+    actual = "@nasm",
+)
+
+# TODO: nvc 1.21.0 (pinned to rules_cc_autoconf 0.12.1) adds a raw
+# `AC_SUBST("PACKAGE_VERSION")` next to a `package_info` target that now
+# also publishes that subst, which HEAD rejects as a duplicate symbol.
+# Re-enable once nvc drops the workaround or the conflict check tolerates it.
+alias(
+    name = "nvc",
+    actual = "@nvc",
+    tags = ["manual"],
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+)
+
+alias(
     name = "patch",
     actual = "@patch",
+)
+
+alias(
+    name = "pkgconf",
+    actual = "@pkgconf",
+)
+
+alias(
+    name = "ppp",
+    actual = "@ppp//:pppd",
+    target_compatible_with = select({
+        "@platforms//os:linux": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 alias(
@@ -96,6 +224,21 @@ alias(
         "@platforms//os:windows": ["@platforms//:incompatible"],
         "//conditions:default": [],
     }),
+)
+
+alias(
+    name = "sdl2",
+    actual = "@sdl2",
+)
+
+alias(
+    name = "sdl3",
+    actual = "@sdl3",
+)
+
+alias(
+    name = "sed",
+    actual = "@sed",
 )
 
 alias(
@@ -117,8 +260,45 @@ alias(
 )
 
 alias(
+    name = "teckit",
+    actual = "@teckit//:TECkit",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "texlive",
+    actual = "@texlive//texk/chktex:chktex",
+)
+
+alias(
     name = "tftp-hpa",
     actual = "@tftp-hpa//:tftp",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "tre",
+    actual = "@tre",
+)
+
+alias(
+    name = "wget",
+    actual = "@wget",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "wget2",
+    actual = "@wget2",
     target_compatible_with = select({
         "@platforms//os:windows": ["@platforms//:incompatible"],
         "//conditions:default": [],
@@ -130,29 +310,86 @@ alias(
     actual = "@x264",
 )
 
+alias(
+    name = "x265",
+    actual = "@x265",
+)
+
+alias(
+    name = "xkbcommon",
+    actual = "@xkbcommon",
+)
+
+alias(
+    name = "xpdf",
+    actual = "@xpdf",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+)
+
+alias(
+    name = "zziplib",
+    actual = "@zziplib",
+)
+
 [
     build_test(
         name = "{}_build_test".format(target.lstrip(":")),
+        tags = ["manual"] if target == ":nvc" else [],
         targets = [target],
     )
     for target in [
         ":bison",
+        ":cpio",
+        ":crispy-doom",
         ":ffmpeg",
         ":flex",
+        ":gawk",
         ":gmp",
+        ":grep",
+        ":gzip",
+        ":iverilog",
+        ":libde265",
         ":libgd",
+        ":libgpiod",
+        ":libheif",
         ":libmicrohttpd",
+        ":libpaper",
         ":libpcap",
         ":libssh2",
+        ":libusb",
         ":libwebsockets",
+        ":libzip",
+        ":linuxptp",
         ":m4",
+        ":make",
         ":mosquitto",
+        ":mpc",
+        ":mpfr",
+        ":nasm",
+        ":nvc",
         ":patch",
+        ":pkgconf",
+        ":ppp",
         ":pq",
         ":readline",
-        ":tcpdump",
-        ":tftp-hpa",
-        ":x264",
+        ":sdl2",
+        ":sdl3",
+        ":sed",
         ":tclsh",
+        ":tcpdump",
+        ":teckit",
+        ":texlive",
+        ":tftp-hpa",
+        ":tre",
+        ":wget",
+        ":wget2",
+        ":x264",
+        ":x265",
+        ":xkbcommon",
+        ":xpdf",
+        ":zziplib",
     ]
 ]
