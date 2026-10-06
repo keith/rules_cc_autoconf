@@ -7,13 +7,15 @@ load("//gnulib:macros.bzl", gl_macros = "macros")
 autoconf(
     name = "gl_ASSERT_H",
     checks = [
-        # Equivalent to gl_ASSERT_H macro from assert_h.m4
+        # Equivalent to gl_ASSERT_H macro from assert_h.m4.
+        # gl_cv_static_assert="yes, a keyword": static_assert works without
+        # including <assert.h>.  Only this variant defines HAVE_C_STATIC_ASSERT
+        # (the "<assert.h> macro" variant does not).
         checks.AC_TRY_COMPILE(
             code = """#if defined __clang__ && __STDC_VERSION__ < 202311
 #pragma clang diagnostic error "-Wc2x-extensions"
 #pragma clang diagnostic error "-Wc++1z-extensions"
 #endif
-#include <assert.h>
 static_assert (2 + 2 == 4, "arithmetic does not work");
 static_assert (2 + 2 == 4);
 
