@@ -7,6 +7,7 @@ load(
     "//autoconf/private:autoconf_config.bzl",
     "collect_deps",
     "collect_transitive_results",
+    "constant_check_result",
     "create_config_dict",
     "encode_result",
     "get_autoconf_toolchain_cache",
@@ -240,18 +241,29 @@ def autoconf_impl_common(ctx, resolve_toolchain):
         else:
             output = ctx.actions.declare_file("{}/{}.result.cache.json".format(ctx.label.name, name))
 
-            check_spec = ctx.actions.declare_file("{}/{}.check.json".format(ctx.label.name, name))
-            write(
-                actions = ctx.actions,
-                output = check_spec,
-                content = json.encode_indent(check, indent = " " * 4) + "\n",
-            )
+            # Literal defines/substs with no runtime inputs are written
+            # directly: the checker would only echo the value back, so the
+            # process spawn buys nothing.  Everything else gets a checker action.
+            constant_content = constant_check_result(check)
+            if constant_content != None:
+                write(
+                    actions = ctx.actions,
+                    output = output,
+                    content = constant_content,
+                )
+            else:
+                check_spec = ctx.actions.declare_file("{}/{}.check.json".format(ctx.label.name, name))
+                write(
+                    actions = ctx.actions,
+                    output = check_spec,
+                    content = json.encode_indent(check, indent = " " * 4) + "\n",
+                )
 
-            actions[name] = struct(
-                output = output,
-                check = check,
-                input = check_spec,
-            )
+                actions[name] = struct(
+                    output = output,
+                    check = check,
+                    input = check_spec,
+                )
 
         # Define/subst conflict detection: different cache variable claiming same symbol = error
         if define:
